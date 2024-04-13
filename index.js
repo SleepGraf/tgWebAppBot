@@ -5,7 +5,7 @@ const {botOptConfirmAuto,botOptSA_daewoo_matiz3,botOptSA_daewoo_matiz2,botOptSA_
 const token = '7090132496:AAG5KIRPaz97NhmRpaHEErwBqf-Y6C0l3nY';
 const bot = new TelegramApi(token, {polling: true});
 const app = express();
-const dasd = "dsad";
+
 app.use(express.json());
 app.use(cors());
 
@@ -197,8 +197,6 @@ const start = () => {
         //
     })
 
-}
-
 app.post('/web-data', async (req, res) => {
     const {queryId, products = [], totalPrice} = req.body;
     try {
@@ -219,6 +217,12 @@ app.post('/web-data', async (req, res) => {
 const PORT = 8000;
 
 app.listen(PORT, () => console.log('server started on PORT ' + PORT))
+
+    
+
+    
+}
+
 
 
 
