@@ -1,9 +1,15 @@
 const TelegramApi = require('node-telegram-bot-api');
+const express = require('express');
+const cors = require('cors');
 const {botOptConfirmAuto,botOptSA_daewoo_matiz3,botOptSA_daewoo_matiz2,botOptSA_daewoo_matiz1,botOptSA_daewoo_matiz,botOptSA_daewoo,botOptSelectAuto,botOptLM_brakeback,botOptLM_brakefront,botOptLM_brake,botOptLM_suspback,botOptLM_suspfront,botOptLM_suspens,botOptLM_freezsys,botOptLM_enggrm,botOptLM_engine,botOptLM_strap,botOptLM_started,botOptLM_electric,botOptLM_steering,botOptLM_oilto_oillist,botOptLM_oilto,botOptionsStart, botOptGen, botOptListMain} = require('./options');
 const token = '7090132496:AAG5KIRPaz97NhmRpaHEErwBqf-Y6C0l3nY';
 const bot = new TelegramApi(token, {polling: true});
+const app = express();
+const dasd = "dsad";
+app.use(express.json());
+app.use(cors());
 
-let UserData = {
+var UserData = {
     checkAuto: false,
     name:'none',
     id:'none',
@@ -52,7 +58,7 @@ const start = () => {
             console.log(msg)
             if (data === '/mainplace') {
                 bot.deleteMessage(chatId, messageId)
-                if (UserData.checkAuto == true) {
+                if (UserData.checkAuto === true) {
                     await bot.sendMessage(chatId, `Общий каталог`, botOptListMain)
                 } else
                 return  bot.sendMessage(chatId, `Выберите марку`, botOptSelectAuto)
@@ -163,22 +169,22 @@ const start = () => {
             UserData.auto.model = textData;
 
             await bot.deleteMessage(chatId, messageId)
-            await bot.sendMessage(chatId, `${UserData.auto.marka,UserData.auto.model} [0.8 л]`, botOptConfirmAuto)
+            await bot.sendMessage(chatId, `${UserData.auto.marka} ${UserData.auto.model} [0.8 л]`, botOptConfirmAuto)
         }
         if (data === '/matiz11') {
             UserData.auto.model = textData;
             await bot.deleteMessage(chatId, messageId)
-            await bot.sendMessage(chatId, `${UserData.auto.marka,UserData.auto.model} [1.0 л]`, botOptConfirmAuto)
+            await bot.sendMessage(chatId, `${UserData.auto.marka} ${UserData.auto.model} [1.0 л]`, botOptConfirmAuto)
         }
         if (data === '/matiz208') {
             UserData.auto.model = textData;
             await bot.deleteMessage(chatId, messageId)
-            await bot.sendMessage(chatId, `${UserData.auto.marka,UserData.auto.model} [0.8 л]`, botOptConfirmAuto)
+            await bot.sendMessage(chatId, `${UserData.auto.marka} ${UserData.auto.model} [0.8 л]`, botOptConfirmAuto)
         }
         if (data === '/matiz31') {
             UserData.auto.model = textData;
             await bot.deleteMessage(chatId, messageId)
-            await bot.sendMessage(chatId, `${UserData.auto.marka,UserData.auto.model} [1.0 л]`, botOptConfirmAuto)
+            await bot.sendMessage(chatId, `${UserData.auto.marka} ${UserData.auto.model} [1.0 л]`, botOptConfirmAuto)
         }
 
 
@@ -193,6 +199,26 @@ const start = () => {
 
 }
 
+app.post('/web-data', async (req, res) => {
+    const {queryId, products = [], totalPrice} = req.body;
+    try {
+        await bot.answerWebAppQuery(queryId, {
+            type: 'article',
+            id: queryId,
+            title: 'Успешная покупка',
+            input_message_content: {
+                message_text: ` Поздравляю с покупкой, вы приобрели товар на сумму ${totalPrice}, ${products.map(item => item.title).join(', ')}`
+            }
+        })
+        return res.status(200).json({});
+    } catch (e) {
+        return res.status(500).json({})
+    }
+})
+
+const PORT = 8000;
+
+app.listen(PORT, () => console.log('server started on PORT ' + PORT))
 
 
 
